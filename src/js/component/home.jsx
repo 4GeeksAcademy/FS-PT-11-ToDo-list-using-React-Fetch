@@ -5,7 +5,7 @@ const Home = () => {
   const [todos, setTodos] = useState([]);
 
   const fetchTodos = useCallback(() => {
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/alesanchezr", {
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/AdrianoMax", {
       method: "GET",
       // body: JSON.stringify("{'label':'You','done': false}"),
       headers: {
@@ -55,7 +55,27 @@ const Home = () => {
   };
 
   const handleClearTasks = () => {
-    setTodos([]);
+    const emptyTask = { label: "Empty task", done: false };
+    const emptyTasks = [emptyTask];
+
+    fetch("https://assets.breatheco.de/apis/fake/todos/user/AdrianoMax", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(emptyTasks),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Tasks cleared:", data);
+        setTodos([]);
+      })
+      .then(() => {
+        fetchTodos();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
